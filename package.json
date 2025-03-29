@@ -6,7 +6,7 @@
 		"name": "Red-Token",
 		"email": "rene.malmgren@redtoken.ae"
 	},
-	"version": "0.0.5",
+	"version": "0.0.6-snapshot.0",
 	"main": ".vite/main/main.js",
 	"type": "module",
 	"scripts": {
