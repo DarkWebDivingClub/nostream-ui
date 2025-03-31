@@ -3,7 +3,8 @@
 	import {goto} from '$app/navigation';
 	import imdbApi from '$lib/api/ImdbApi';
 
-	let search = 'Big Buck Bunny';
+	// let search = 'Big Buck Bunny';
+	let search = 'Sintel';
 	// let search = 'Game of Thrones';
 	// let search = 'House of the Dragon';
 

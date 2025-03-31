@@ -14,6 +14,15 @@
 	import {wt} from '@src/stores/wtZool.svelte';
 	import {globalNostrContext, globalRunes, me} from '@src/stores/profile.svelte';
 
+	// type RequestState = {
+	// 	state: string,
+	// 	seq: number,
+	// 	total: number,
+	// 	progress: number,
+	// 	message: string,
+	// 	final: boolean,
+	// }
+
 	const template = JSON.parse(sessionStorage.getItem('createTemplate') || '{}');
 
 	const states = $state({
@@ -24,8 +33,10 @@
 		imdbId: template.imdbId,
 		infoHash: '',
 		file: null,
-		resp: {states: {states: null, msg: 'Not started the request', progress: 0}}
+		resp: {states: {state: null, seq: 0, total: 100, message: 'Not started the request', progress: 0, final: false}}
 	});
+
+	let progress = $derived(states.resp.states.final ? 100 : ((100 * Math.max(states.resp.states.seq - 1, 0)) + states.resp.states.progress) / states.resp.states.total);
 
 	let selectedOption: string | undefined = $state('');
 	let isOpen: boolean = $state(false);
@@ -72,6 +83,7 @@
 
 	const options = {
 		announce: ['wss://tracker.webtorrent.dev', 'wss://tracker.btorrent.xyz', 'wss://tracker.openwebtorrent.com'],
+		// announce: ['wss://tracker.webtorrent.dev', 'wss://tracker.btorrent.xyz'],
 		maxWebConns: 500
 	};
 
@@ -115,7 +127,7 @@
 		});
 	}
 
-	function onTranscode() {
+	async function onTranscode() {
 		console.log(states.file);
 		console.log('transcode!');
 
@@ -142,9 +154,61 @@
 			// DO NOT USE CHECK THE BOTKEY
 			// const botPubkey = getPublicKey(botSeckey);
 
-			const req = new Nip9999SeederTorrentTransformationRequestEvent(states.botPubkey, states.title, torrent.infoHash, {
-				transform: 'cool'
-			});
+			// TODO: VERY UGLY COPY PASTE THAT SHOULD BE MOVED SOMEWHERE ELSE! WE NEDD A BOT API MODULE
+			type Format = {
+				width: number,
+				height: number,
+				video_bitrate?: string,
+			}
+
+			type Formats = {
+				[key: string]: Format
+			}
+
+			const formats: Formats = {
+				sd: {
+					width: 720,
+					height: 480
+					// video_bitrate: '1500k'
+				},
+				hd: {
+					width: 1280,
+					height: 720
+					// video_bitrate: '2500k'
+				},
+				fhd: {
+					width: 1920,
+					height: 1080
+					// video_bitrate: '5000k'
+				}
+				// uhd: {
+				// 	width: 3840,
+				// 	height: 2160
+				// 	// video_bitrate: '8000k'
+				// }
+			};
+
+			type Language = {
+				short: string
+				name: string
+			}
+
+			type Languages = {
+				[key: string]: Language
+			}
+
+			const languages: Languages = {
+				en: {short: 'en', name: 'English'}
+			};
+
+			const reqt = {
+				file: torrent.files[0].path,
+				subtitles: [{lang: languages.en}],
+				formats: formats,
+				imdbId: states.imdbId
+			};
+
+			const req = new Nip9999SeederTorrentTransformationRequestEvent(states.botPubkey, states.title, torrent.infoHash, reqt);
 
 			const {dss, pub} = ncs.request(req);
 
@@ -168,9 +232,9 @@
 			});
 		});
 
-		torrent.on('upload', (bytes: any) => {
-			console.log(bytes);
-		});
+		// torrent.on('upload', (bytes: any) => {
+		// 	// console.log(bytes);
+		// });
 
 		torrent.on('error', (err: any) => {
 			console.log(err);
@@ -228,8 +292,8 @@
 				<input id="file" type="file" accept="video/*" onchange={handleChange} class="file-input" />
 			</div>
 
-			{#if states.resp.states.states === null}
-				{#if states.file !== null}
+			{#if states.resp.states.state === null}
+				{#if states.file !== null && states.community !== undefined }
 					<button type="button" class="submit-btn" onclick={() => onTranscode()}>
 						Submit to Seeder for transcoding
 						<svg class="submit-icon" viewBox="0 0 24 24">
@@ -239,8 +303,8 @@
 				{/if}
 			{:else}
 				<div class="progressbar-container">
-					<div class="progressbar-bar" style="width: {states.resp.states.progress}%;"></div>
-					<div class="progressbar-text">{states.resp.states.states}</div>
+					<div class="progressbar-bar" style="width: {progress}%;"></div>
+					<div class="progressbar-text">{states.resp.states.state}</div>
 				</div>
 			{/if}
 
@@ -268,208 +332,210 @@
 	{/each}
 </select> -->
 <style>
-	/* test */
-	.custom-select {
-		position: relative;
-		width: 100%;
-	}
-	.select-trigger {
-		padding: 10px;
-		background: var(--bg-2);
-		border: 1px solid var(--border-color);
-		border-radius: 8px;
-		color: var(--fg-1);
-		cursor: pointer;
-	}
-	.select-options {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		right: 0;
-		background: var(--bg-2);
-		border: 2px solid var(--border-color);
-		border-radius: 8px;
-		max-height: 200px;
-		overflow-y: auto;
-		z-index: 10;
-		backdrop-filter: blur(10px);
-	}
-	.select-options li {
-		padding: 10px;
-		color: var(--fg-1);
-		cursor: pointer;
-	}
-	.select-options li:hover {
-		background: var(--accent-color);
-	}
+    /* test */
+    .custom-select {
+        position: relative;
+        width: 100%;
+    }
 
-	/* end test */
+    .select-trigger {
+        padding: 10px;
+        background: var(--bg-2);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--fg-1);
+        cursor: pointer;
+    }
 
-	.create-container {
-		max-width: 600px;
-		margin: 2rem auto;
-		padding: 0 1rem;
-		box-sizing: border-box;
-	}
+    .select-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--bg-2);
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+    }
 
-	.form-card {
-		background: var(--bg-1);
-		border-radius: 16px;
-		border: 1px solid var(--border-color);
-		padding: 2rem;
-		box-shadow: 0 4px 12px var(--shadow-color);
-		overflow: hidden;
-	}
+    .select-options li {
+        padding: 10px;
+        color: var(--fg-1);
+        cursor: pointer;
+    }
 
-	.input-group {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
+    .select-options li:hover {
+        background: var(--accent-color);
+    }
 
-	.form-field {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
+    /* end test */
 
-	label {
-		font-size: 0.9rem;
-		color: var(--fg-1);
-	}
+    .create-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        box-sizing: border-box;
+    }
 
-	.form-input {
-		width: 100%;
-		padding: 1rem;
-		font-size: 1rem;
-		background: var(--bg-2);
-		border: 1px solid var(--border-color);
-		border-radius: 8px;
-		color: var(--text-fg-1);
-		transition: all 0.3s ease;
-	}
+    .form-card {
+        background: var(--bg-1);
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        padding: 2rem;
+        box-shadow: 0 4px 12px var(--shadow-color);
+        overflow: hidden;
+    }
 
-	.form-input:focus {
-		outline: none;
-		border-color: var(--accent-color);
-		transform: translateY(-1px);
-		box-shadow:
-			0 0 0 3px var(--accent-transparent),
-			0 2px 8px var(--color-hover);
-	}
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 
-	.form-input::placeholder {
-		color: var(--fg-2);
-	}
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 
-	.upload-label {
-		display: block;
-		padding: 0.75rem;
-		background: var(--bg-3);
-		color: var(--fg-1);
-		border-radius: 6px;
-		cursor: pointer;
-		transition: background 0.2s ease;
-		text-align: center;
-	}
+    label {
+        font-size: 0.9rem;
+        color: var(--fg-1);
+    }
 
-	.upload-label:hover {
-		background: var(--border-color);
-	}
+    .form-input {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        background: var(--bg-2);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-fg-1);
+        transition: all 0.3s ease;
+    }
 
-	.file-input {
-		display: none;
-	}
+    .form-input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        transform: translateY(-1px);
+        box-shadow: 0 0 0 3px var(--accent-transparent),
+        0 2px 8px var(--color-hover);
+    }
 
-	.progressbar-container {
-		width: 100%;
-		height: 30px;
-		position: relative;
-		background: var(--bg-2);
-		border: 2px solid var(--border-color);
-		border-radius: 8px;
-		overflow: hidden;
-	}
+    .form-input::placeholder {
+        color: var(--fg-2);
+    }
 
-	.progressbar-bar {
-		height: 100%;
-		background: var(--accent-color);
-		/* animation: width 0.4s; */
-		transition: width 0.4s ease-in-out;
-	}
+    .upload-label {
+        display: block;
+        padding: 0.75rem;
+        background: var(--bg-3);
+        color: var(--fg-1);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        text-align: center;
+    }
 
-	.progressbar-text {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		color: #fff;
-		font-size: 14px;
-		pointer-events: none;
-	}
+    .upload-label:hover {
+        background: var(--border-color);
+    }
 
-	.submit-btn {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		width: 100%;
-		padding: 1rem;
-		border: 2px solid var(--border-color);
-		background: transparent;
-		color: white;
-		border-radius: 8px;
-		font-size: 1.1rem;
-		font-weight: 500;
-		cursor: pointer;
-		transition:
-			transform 0.2s ease,
-			background 0.3s ease;
-	}
+    .file-input {
+        display: none;
+    }
 
-	.submit-btn:hover {
-		transform: translateY(-1px);
-		background: var(--accent-color);
-	}
+    .progressbar-container {
+        width: 100%;
+        height: 30px;
+        position: relative;
+        background: var(--bg-2);
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        overflow: hidden;
+    }
 
-	.submit-btn:disabled {
-		color: #999;
-		cursor: not-allowed;
-	}
+    .progressbar-bar {
+        height: 100%;
+        background: var(--accent-color);
+        /* animation: width 0.4s; */
+        transition: width 0.4s ease-in-out;
+    }
 
-	.submit-btn:disabled:hover {
-		background-color: var(--bg-2);
-	}
+    .progressbar-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-size: 14px;
+        pointer-events: none;
+    }
 
-	.submit-icon {
-		width: 24px;
-		height: 24px;
-		fill: currentColor;
-	}
+    .submit-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid var(--border-color);
+        background: transparent;
+        color: white;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 0.2s ease,
+        background 0.3s ease;
+    }
 
-	@media (max-width: 768px) {
-		.create-container {
-			padding: 0 0.5rem;
-		}
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        background: var(--accent-color);
+    }
 
-		.form-card {
-			padding: 1.5rem;
-			border-radius: 12px;
-		}
+    .submit-btn:disabled {
+        color: #999;
+        cursor: not-allowed;
+    }
 
-		.form-input,
-		.submit-btn {
-			padding: 0.875rem;
-			font-size: 0.95rem;
-		}
-	}
+    .submit-btn:disabled:hover {
+        background-color: var(--bg-2);
+    }
 
-	@media (max-width: 480px) {
-		.form-card {
-			padding: 1rem;
-		}
+    .submit-icon {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
+    }
 
-		.input-group {
-			gap: 1rem;
-		}
-	}
+    @media (max-width: 768px) {
+        .create-container {
+            padding: 0 0.5rem;
+        }
+
+        .form-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .form-input,
+        .submit-btn {
+            padding: 0.875rem;
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .form-card {
+            padding: 1rem;
+        }
+
+        .input-group {
+            gap: 1rem;
+        }
+    }
 </style>

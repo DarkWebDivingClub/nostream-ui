@@ -67,6 +67,10 @@
 			return file.name.endsWith('.mpd');
 		});
 
+		console.log(playFile?.streamURL);
+
+		const xn = playFile?.streamURL
+
 		// Add support of MP4
 		if (!playFile) {
 			playFile = torrent.files.find((file: TorrentFile) => {
@@ -81,8 +85,10 @@
 		if (videoElement) {
 			player.src([
 				{
-					src: playFile.streamURL
+					src: xn,
+					// src: playFile.streamURL,
 					// type: playFile.type
+					type: "application/dash+xml"
 				}
 			]);
 			player.load();

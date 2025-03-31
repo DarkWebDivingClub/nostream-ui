@@ -9,6 +9,7 @@
 	import {Nip35TorrentEvent, UserType} from 'iz-nostrlib/nips';
 	import {DynamicSubscription, DynamicSynchronisedSession} from 'iz-nostrlib/ses';
 	import {globalRunes} from '@src/stores/profile.svelte';
+	import {goto} from '$app/navigation';
 
 	enum RelayType {
 		READ = 'read',
@@ -111,7 +112,9 @@
 	});
 
 	function upload() {
+		sessionStorage.setItem('createTemplate', JSON.stringify({title: '', imdbId: page.params.id}));
 		console.log(page.params.id);
+		goto('/create/asset')
 	}
 </script>
 
@@ -126,58 +129,58 @@
 </div>
 
 <style>
-	.video-page {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 2rem;
-		min-height: 100vh;
-		background-color: var(--bg-1);
-	}
+    .video-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        min-height: 100vh;
+        background-color: var(--bg-1);
+    }
 
-	.video-container {
-		width: 100%;
-		max-width: 1200px;
-		background: var(--bg-2);
-		border: 1px solid var(--border-color);
-		border-radius: 16px;
-		box-shadow: 0 4px 12px var(--shadow-color);
-		padding: 1.5rem;
-		position: relative;
-	}
+    .video-container {
+        width: 100%;
+        max-width: 1200px;
+        background: var(--bg-2);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        box-shadow: 0 4px 12px var(--shadow-color);
+        padding: 1.5rem;
+        position: relative;
+    }
 
-	#video-player {
-		width: 100%;
-		height: auto;
-		border-radius: 8px;
-		outline: none;
-	}
+    #video-player {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        outline: none;
+    }
 
-	.torrent-title {
-		font-size: 1.5rem;
-		font-weight: 600;
-		color: var(--fg-1);
-		margin-top: 1.5rem;
-		text-align: center;
-	}
+    .torrent-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--fg-1);
+        margin-top: 1.5rem;
+        text-align: center;
+    }
 
-	@media (max-width: 768px) {
-		.video-container {
-			padding: 1rem;
-		}
+    @media (max-width: 768px) {
+        .video-container {
+            padding: 1rem;
+        }
 
-		.torrent-title {
-			font-size: 1.3rem;
-		}
-	}
+        .torrent-title {
+            font-size: 1.3rem;
+        }
+    }
 
-	@media (max-width: 480px) {
-		.video-container {
-			padding: 0.5rem;
-		}
+    @media (max-width: 480px) {
+        .video-container {
+            padding: 0.5rem;
+        }
 
-		.torrent-title {
-			font-size: 1.1rem;
-		}
-	}
+        .torrent-title {
+            font-size: 1.1rem;
+        }
+    }
 </style>

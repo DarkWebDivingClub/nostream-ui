@@ -34,7 +34,8 @@ let options = {
 	maxWebConns: 500
 };
 
-navigator.serviceWorker.register('/sw.min.js', {scope: '/'}).then((reg) => {
+// navigator.serviceWorker.register('/sw.min.js', {scope: '/'}).then((reg) => {
+navigator.serviceWorker.register('/sw.min.js').then((reg) => {
 	console.log('I am service worker!');
 
 	const worker = reg.active || reg.waiting || reg.installing;
