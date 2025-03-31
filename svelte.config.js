@@ -6,11 +6,12 @@ const config = {
 	preprocess: vitePreprocess({script: true}),
 
 	kit: {
-		csp: {
-			directives: {
-				'script-src': ['self']
-			}
-		},
+		// csp: {
+		// 	directives: {
+		// 		'worker-src': ['self'],
+		// 		'script-src': ['self']
+		// 	}
+		// },
 		paths: {
 			relative: false
 		},
@@ -19,15 +20,15 @@ const config = {
 			pages: '.vite/main_window',
 			assets: '.vite/main_window'
 		}),
-		files: {
-			assets: 'static',
-			lib: 'src/lib',
-			params: 'src/params',
-			routes: 'src/routes',
-			//serviceWorker: "src-renderer/service-worker",//static/sw.min.js
-			appTemplate: 'src/app.html',
-			errorTemplate: 'src/error.html'
-		},
+		// files: {
+		// 	assets: 'static',
+		// 	lib: 'src/lib',
+		// 	params: 'src/params',
+		// 	routes: 'src/routes',
+		// 	// serviceWorker: 'src/static/sw.min.js',
+		// 	appTemplate: 'src/app.html',
+		// 	errorTemplate: 'src/error.html'
+		// },
 		alias: {
 			$config: 'src/config/config.js',
 			'@src': 'src',

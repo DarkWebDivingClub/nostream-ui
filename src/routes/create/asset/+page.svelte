@@ -36,7 +36,11 @@
 		resp: {states: {state: null, seq: 0, total: 100, message: 'Not started the request', progress: 0, final: false}}
 	});
 
-	let progress = $derived(states.resp.states.final ? 100 : ((100 * Math.max(states.resp.states.seq - 1, 0)) + states.resp.states.progress) / states.resp.states.total);
+	let progress = $derived(
+		states.resp.states.final
+			? 100
+			: (100 * Math.max(states.resp.states.seq - 1, 0) + states.resp.states.progress) / states.resp.states.total
+	);
 
 	let selectedOption: string | undefined = $state('');
 	let isOpen: boolean = $state(false);
@@ -156,14 +160,14 @@
 
 			// TODO: VERY UGLY COPY PASTE THAT SHOULD BE MOVED SOMEWHERE ELSE! WE NEDD A BOT API MODULE
 			type Format = {
-				width: number,
-				height: number,
-				video_bitrate?: string,
-			}
+				width: number;
+				height: number;
+				video_bitrate?: string;
+			};
 
 			type Formats = {
-				[key: string]: Format
-			}
+				[key: string]: Format;
+			};
 
 			const formats: Formats = {
 				sd: {
@@ -189,13 +193,13 @@
 			};
 
 			type Language = {
-				short: string
-				name: string
-			}
+				short: string;
+				name: string;
+			};
 
 			type Languages = {
-				[key: string]: Language
-			}
+				[key: string]: Language;
+			};
 
 			const languages: Languages = {
 				en: {short: 'en', name: 'English'}
@@ -208,7 +212,12 @@
 				imdbId: states.imdbId
 			};
 
-			const req = new Nip9999SeederTorrentTransformationRequestEvent(states.botPubkey, states.title, torrent.infoHash, reqt);
+			const req = new Nip9999SeederTorrentTransformationRequestEvent(
+				states.botPubkey,
+				states.title,
+				torrent.infoHash,
+				reqt
+			);
 
 			const {dss, pub} = ncs.request(req);
 
@@ -293,7 +302,7 @@
 			</div>
 
 			{#if states.resp.states.state === null}
-				{#if states.file !== null && states.community !== undefined }
+				{#if states.file !== null && states.community !== undefined}
 					<button type="button" class="submit-btn" onclick={() => onTranscode()}>
 						Submit to Seeder for transcoding
 						<svg class="submit-icon" viewBox="0 0 24 24">
@@ -332,210 +341,212 @@
 	{/each}
 </select> -->
 <style>
-    /* test */
-    .custom-select {
-        position: relative;
-        width: 100%;
-    }
+	/* test */
+	.custom-select {
+		position: relative;
+		width: 100%;
+	}
 
-    .select-trigger {
-        padding: 10px;
-        background: var(--bg-2);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        color: var(--fg-1);
-        cursor: pointer;
-    }
+	.select-trigger {
+		padding: 10px;
+		background: var(--bg-2);
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		color: var(--fg-1);
+		cursor: pointer;
+	}
 
-    .select-options {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--bg-2);
-        border: 2px solid var(--border-color);
-        border-radius: 8px;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 10;
-        backdrop-filter: blur(10px);
-    }
+	.select-options {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background: var(--bg-2);
+		border: 2px solid var(--border-color);
+		border-radius: 8px;
+		max-height: 200px;
+		overflow-y: auto;
+		z-index: 10;
+		backdrop-filter: blur(10px);
+	}
 
-    .select-options li {
-        padding: 10px;
-        color: var(--fg-1);
-        cursor: pointer;
-    }
+	.select-options li {
+		padding: 10px;
+		color: var(--fg-1);
+		cursor: pointer;
+	}
 
-    .select-options li:hover {
-        background: var(--accent-color);
-    }
+	.select-options li:hover {
+		background: var(--accent-color);
+	}
 
-    /* end test */
+	/* end test */
 
-    .create-container {
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-        box-sizing: border-box;
-    }
+	.create-container {
+		max-width: 600px;
+		margin: 2rem auto;
+		padding: 0 1rem;
+		box-sizing: border-box;
+	}
 
-    .form-card {
-        background: var(--bg-1);
-        border-radius: 16px;
-        border: 1px solid var(--border-color);
-        padding: 2rem;
-        box-shadow: 0 4px 12px var(--shadow-color);
-        overflow: hidden;
-    }
+	.form-card {
+		background: var(--bg-1);
+		border-radius: 16px;
+		border: 1px solid var(--border-color);
+		padding: 2rem;
+		box-shadow: 0 4px 12px var(--shadow-color);
+		overflow: hidden;
+	}
 
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+	.input-group {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
 
-    .form-field {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+	.form-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
 
-    label {
-        font-size: 0.9rem;
-        color: var(--fg-1);
-    }
+	label {
+		font-size: 0.9rem;
+		color: var(--fg-1);
+	}
 
-    .form-input {
-        width: 100%;
-        padding: 1rem;
-        font-size: 1rem;
-        background: var(--bg-2);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        color: var(--text-fg-1);
-        transition: all 0.3s ease;
-    }
+	.form-input {
+		width: 100%;
+		padding: 1rem;
+		font-size: 1rem;
+		background: var(--bg-2);
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		color: var(--text-fg-1);
+		transition: all 0.3s ease;
+	}
 
-    .form-input:focus {
-        outline: none;
-        border-color: var(--accent-color);
-        transform: translateY(-1px);
-        box-shadow: 0 0 0 3px var(--accent-transparent),
-        0 2px 8px var(--color-hover);
-    }
+	.form-input:focus {
+		outline: none;
+		border-color: var(--accent-color);
+		transform: translateY(-1px);
+		box-shadow:
+			0 0 0 3px var(--accent-transparent),
+			0 2px 8px var(--color-hover);
+	}
 
-    .form-input::placeholder {
-        color: var(--fg-2);
-    }
+	.form-input::placeholder {
+		color: var(--fg-2);
+	}
 
-    .upload-label {
-        display: block;
-        padding: 0.75rem;
-        background: var(--bg-3);
-        color: var(--fg-1);
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background 0.2s ease;
-        text-align: center;
-    }
+	.upload-label {
+		display: block;
+		padding: 0.75rem;
+		background: var(--bg-3);
+		color: var(--fg-1);
+		border-radius: 6px;
+		cursor: pointer;
+		transition: background 0.2s ease;
+		text-align: center;
+	}
 
-    .upload-label:hover {
-        background: var(--border-color);
-    }
+	.upload-label:hover {
+		background: var(--border-color);
+	}
 
-    .file-input {
-        display: none;
-    }
+	.file-input {
+		display: none;
+	}
 
-    .progressbar-container {
-        width: 100%;
-        height: 30px;
-        position: relative;
-        background: var(--bg-2);
-        border: 2px solid var(--border-color);
-        border-radius: 8px;
-        overflow: hidden;
-    }
+	.progressbar-container {
+		width: 100%;
+		height: 30px;
+		position: relative;
+		background: var(--bg-2);
+		border: 2px solid var(--border-color);
+		border-radius: 8px;
+		overflow: hidden;
+	}
 
-    .progressbar-bar {
-        height: 100%;
-        background: var(--accent-color);
-        /* animation: width 0.4s; */
-        transition: width 0.4s ease-in-out;
-    }
+	.progressbar-bar {
+		height: 100%;
+		background: var(--accent-color);
+		/* animation: width 0.4s; */
+		transition: width 0.4s ease-in-out;
+	}
 
-    .progressbar-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #fff;
-        font-size: 14px;
-        pointer-events: none;
-    }
+	.progressbar-text {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		color: #fff;
+		font-size: 14px;
+		pointer-events: none;
+	}
 
-    .submit-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        width: 100%;
-        padding: 1rem;
-        border: 2px solid var(--border-color);
-        background: transparent;
-        color: white;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: transform 0.2s ease,
-        background 0.3s ease;
-    }
+	.submit-btn {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		width: 100%;
+		padding: 1rem;
+		border: 2px solid var(--border-color);
+		background: transparent;
+		color: white;
+		border-radius: 8px;
+		font-size: 1.1rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition:
+			transform 0.2s ease,
+			background 0.3s ease;
+	}
 
-    .submit-btn:hover {
-        transform: translateY(-1px);
-        background: var(--accent-color);
-    }
+	.submit-btn:hover {
+		transform: translateY(-1px);
+		background: var(--accent-color);
+	}
 
-    .submit-btn:disabled {
-        color: #999;
-        cursor: not-allowed;
-    }
+	.submit-btn:disabled {
+		color: #999;
+		cursor: not-allowed;
+	}
 
-    .submit-btn:disabled:hover {
-        background-color: var(--bg-2);
-    }
+	.submit-btn:disabled:hover {
+		background-color: var(--bg-2);
+	}
 
-    .submit-icon {
-        width: 24px;
-        height: 24px;
-        fill: currentColor;
-    }
+	.submit-icon {
+		width: 24px;
+		height: 24px;
+		fill: currentColor;
+	}
 
-    @media (max-width: 768px) {
-        .create-container {
-            padding: 0 0.5rem;
-        }
+	@media (max-width: 768px) {
+		.create-container {
+			padding: 0 0.5rem;
+		}
 
-        .form-card {
-            padding: 1.5rem;
-            border-radius: 12px;
-        }
+		.form-card {
+			padding: 1.5rem;
+			border-radius: 12px;
+		}
 
-        .form-input,
-        .submit-btn {
-            padding: 0.875rem;
-            font-size: 0.95rem;
-        }
-    }
+		.form-input,
+		.submit-btn {
+			padding: 0.875rem;
+			font-size: 0.95rem;
+		}
+	}
 
-    @media (max-width: 480px) {
-        .form-card {
-            padding: 1rem;
-        }
+	@media (max-width: 480px) {
+		.form-card {
+			padding: 1rem;
+		}
 
-        .input-group {
-            gap: 1rem;
-        }
-    }
+		.input-group {
+			gap: 1rem;
+		}
+	}
 </style>
