@@ -69,7 +69,7 @@
 
 		console.log(playFile?.streamURL);
 
-		const xn = playFile?.streamURL;
+		// const xn = playFile?.streamURL;
 
 		// Add support of MP4
 		if (!playFile) {
@@ -85,10 +85,10 @@
 		if (videoElement) {
 			player.src([
 				{
-					src: xn,
-					// src: playFile.streamURL,
+					// src: xn,
+					src: playFile.streamURL,
 					// type: playFile.type
-					type: 'application/dash+xml'
+					// type: 'application/dash+xml'
 				}
 			]);
 			player.load();

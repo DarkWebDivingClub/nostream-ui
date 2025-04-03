@@ -29,10 +29,10 @@ export const wt: WebTorrent = new WebTorrent({
 	}
 });
 
-let options = {
-	announce: ['wss://tracker.webtorrent.dev', 'wss://tracker.btorrent.xyz', 'wss://tracker.openwebtorrent.com'],
-	maxWebConns: 500
-};
+// let options = {
+// 	announce: ['wss://tracker.webtorrent.dev', 'wss://tracker.btorrent.xyz', 'wss://tracker.openwebtorrent.com'],
+// 	maxWebConns: 500
+// };
 
 // navigator.serviceWorker.register('/sw.min.js', {scope: '/'}).then((reg) => {
 navigator.serviceWorker.register('/sw.min.js').then((reg) => {
