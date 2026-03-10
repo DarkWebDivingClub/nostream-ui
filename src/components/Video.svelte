@@ -5,6 +5,7 @@
 	let {infoHash} = $props();
 
 	onMount(() => {
+		console.log("XOOOOL" + infoHash)
 		download(infoHash);
 	});
 

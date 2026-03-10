@@ -20,6 +20,9 @@ const rtcConfig = {
 	iceCandidatePoolSize: 0
 };
 
+// export const wt: WebTorrent = new WebTorrent();
+
+
 export const wt: WebTorrent = new WebTorrent({
 	tracker: {
 		rtcConfig: {
@@ -35,21 +38,20 @@ export const wt: WebTorrent = new WebTorrent({
 // };
 
 // navigator.serviceWorker.register('/sw.min.js', {scope: '/'}).then((reg) => {
-navigator.serviceWorker.register('/sw.min.js').then((reg) => {
-	console.log('I am service worker!');
+if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+	navigator.serviceWorker.register('/sw.min.js').then((reg) => {
+		const worker = reg.active || reg.waiting || reg.installing;
 
-	const worker = reg.active || reg.waiting || reg.installing;
+		if (worker === null) throw new Error('Service worker not available!');
 
-	if (worker === null) throw new Error('Service worker not available!');
+		function checkState(worker: ServiceWorker | null): boolean {
+			return worker !== null && worker.state === 'activated' && wt.createServer({controller: reg}) !== null;
+		}
 
-	function checkState(worker: ServiceWorker | null): boolean {
-		console.log('Check state');
-		return worker !== null && worker.state === 'activated' && wt.createServer({controller: reg}) !== null;
-	}
-
-	if (!checkState(worker)) {
-		worker.addEventListener('statechange', ({target}) => checkState(target as ServiceWorker | null));
-	}
-});
-
-console.log('HERE I STAND');
+		if (!checkState(worker)) {
+			worker.addEventListener('statechange', ({target}) => checkState(target as ServiceWorker | null));
+		}
+	});
+} else {
+	console.warn('[iz-stream] serviceWorker API unavailable in this context, skipping webtorrent server registration');
+}

@@ -119,6 +119,9 @@
 </script>
 
 <div class="video-page">
+
+	Hello!
+
 	<!--	<div class="torrent-title">{page.params.id}</div>-->
 	{#if s.playing !== undefined}
 		<VideoPlayer infoHash={s.playing.x} />

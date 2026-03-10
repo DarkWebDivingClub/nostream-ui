@@ -93,7 +93,7 @@
 		"async-mutex": "^0.5.0",
 		"electron-squirrel-startup": "^1.0.1",
 		"electron-store": "^10.0.1",
-		"iz-nostrlib": "^0.2.3",
+		"iz-nostrlib": "^0.2.4",
 		"leaflet": "^1.9.4",
 		"ngeohash": "^0.6.3",
 		"nostr-tools": "^2.10.4",
@@ -102,7 +102,8 @@
 		"pino-pretty": "^13.0.0",
 		"simple-peer": "^9.11.1",
 		"svelte-routing": "^2.13.0",
-		"video.js": "^8.21.0",
+		"video.js": "^8.22.0",
+		"videojs-contrib-dash": "^5.1.1",
 		"webtorrent": "^2.5.12"
 	}
 }

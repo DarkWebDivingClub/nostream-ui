@@ -27,7 +27,9 @@
 
 	const states = $state({
 		community: '',
-		botPubkey: 'b1e997f11f8d454eae2b2c1d52948e800df4e7103412d78984827eea2be138b2',
+		bot: '',
+		botPubkey: '4793a715a1f58a2729dcefd18234d6f970231b938634328317a05ce3a0b8ea85',
+		// botPubkey: 'b1e997f11f8d454eae2b2c1d52948e800df4e7103412d78984827eea2be138b2',
 		formats: undefined,
 		title: template.title,
 		imdbId: template.imdbId,
@@ -43,8 +45,14 @@
 	);
 
 	let selectedOption: string | undefined = $state('');
+
 	let isOpen: boolean = $state(false);
 	let selectElement: HTMLElement | null = null;
+
+	let selectedOption2: string | undefined = $state('');
+	let isOpen2: boolean = $state(false);
+	let selectElement2: HTMLElement | null = null;
+
 
 	function handleClickOutside(event: MouseEvent): void {
 		if (selectElement && !selectElement.contains(event.target as Node)) {
@@ -126,9 +134,12 @@
 		// 	const x = publisher.publish(Nip35TorrentEvent.KIND, te.opts);
 		// });
 
-		goto(`/view/infoHash/${states.infoHash}`).then((r) => {
-			console.log(r);
-		});
+		const v: string = `/view/infoHash/${states.infoHash}`;
+		await goto(v)
+
+		// goto(v).then((r) => {
+		// 	console.log(r);
+		// });
 	}
 
 	async function onTranscode() {
@@ -250,8 +261,12 @@
 		});
 
 		torrent.on('wire', (wire: any) => {
-			console.log(wire);
+			console.log("Wire" + wire);
 		});
+
+		torrent.on('noPeers', (announceType: any) =>  {
+			console.log(announceType);
+		})
 	}
 
 	async function handleChange(event: any) {
@@ -285,6 +300,31 @@
 					{/if}
 				</div>
 			</div>
+
+			<div class="form-field">
+				<label for="bot">Bot</label>
+				<div class="custom-select" bind:this={selectElement2}>
+					<div class="select-trigger" role="dialog" onclick={() => (isOpen2 = !isOpen2)}>
+						{selectedOption2 || 'Select bot'}
+					</div>
+					{#if isOpen2}
+						<ul class="select-options">
+							{#each globalRunes.services as option}
+								<li
+									onclick={() => {
+										selectedOption2 = globalRunes.profiles.get(option.pubkey)?.nip01Event.profile.name ?? option.pubkey;
+										states.bot = option.pubkey;
+										isOpen2 = false;
+									}}
+								>
+									{option.nickname ?? globalRunes.profiles.get(option.pubkey)?.nip01Event.profile.name ?? option.pubkey}
+								</li>
+							{/each}
+						</ul>
+					{/if}
+				</div>
+			</div>
+
 
 			<div class="form-field">
 				<label for="title">Movie title</label>

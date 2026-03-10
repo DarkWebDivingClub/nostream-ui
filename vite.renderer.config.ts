@@ -6,6 +6,8 @@ import {viteStaticCopy} from 'vite-plugin-static-copy';
 //https://vitejs.dev/config
 export default defineConfig({
 	server: {
+		host: true,
+		allowedHosts: ['iz-stream-ui', 'localhost', '127.0.0.1'],
 		fs: {
 			allow: ['./src']
 		}
