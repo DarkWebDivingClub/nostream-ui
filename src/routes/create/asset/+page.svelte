@@ -14,22 +14,45 @@
 	import {wt} from '@src/stores/wtZool.svelte';
 	import {globalNostrContext, globalRunes, me} from '@src/stores/profile.svelte';
 
+	// type RequestState = {
+	// 	state: string,
+	// 	seq: number,
+	// 	total: number,
+	// 	progress: number,
+	// 	message: string,
+	// 	final: boolean,
+	// }
+
 	const template = JSON.parse(sessionStorage.getItem('createTemplate') || '{}');
 
 	const states = $state({
 		community: '',
-		botPubkey: 'b1e997f11f8d454eae2b2c1d52948e800df4e7103412d78984827eea2be138b2',
+		bot: '',
+		botPubkey: '4793a715a1f58a2729dcefd18234d6f970231b938634328317a05ce3a0b8ea85',
+		// botPubkey: 'b1e997f11f8d454eae2b2c1d52948e800df4e7103412d78984827eea2be138b2',
 		formats: undefined,
 		title: template.title,
 		imdbId: template.imdbId,
 		infoHash: '',
 		file: null,
-		resp: {states: {states: null, msg: 'Not started the request', progress: 0}}
+		resp: {states: {state: null, seq: 0, total: 100, message: 'Not started the request', progress: 0, final: false}}
 	});
 
+	let progress = $derived(
+		states.resp.states.final
+			? 100
+			: (100 * Math.max(states.resp.states.seq - 1, 0) + states.resp.states.progress) / states.resp.states.total
+	);
+
 	let selectedOption: string | undefined = $state('');
+
 	let isOpen: boolean = $state(false);
 	let selectElement: HTMLElement | null = null;
+
+	let selectedOption2: string | undefined = $state('');
+	let isOpen2: boolean = $state(false);
+	let selectElement2: HTMLElement | null = null;
+
 
 	function handleClickOutside(event: MouseEvent): void {
 		if (selectElement && !selectElement.contains(event.target as Node)) {
@@ -72,6 +95,7 @@
 
 	const options = {
 		announce: ['wss://tracker.webtorrent.dev', 'wss://tracker.btorrent.xyz', 'wss://tracker.openwebtorrent.com'],
+		// announce: ['wss://tracker.webtorrent.dev', 'wss://tracker.btorrent.xyz'],
 		maxWebConns: 500
 	};
 
@@ -110,12 +134,15 @@
 		// 	const x = publisher.publish(Nip35TorrentEvent.KIND, te.opts);
 		// });
 
-		goto(`/view/infoHash/${states.infoHash}`).then((r) => {
-			console.log(r);
-		});
+		const v: string = `/view/infoHash/${states.infoHash}`;
+		await goto(v)
+
+		// goto(v).then((r) => {
+		// 	console.log(r);
+		// });
 	}
 
-	function onTranscode() {
+	async function onTranscode() {
 		console.log(states.file);
 		console.log('transcode!');
 
@@ -142,9 +169,66 @@
 			// DO NOT USE CHECK THE BOTKEY
 			// const botPubkey = getPublicKey(botSeckey);
 
-			const req = new Nip9999SeederTorrentTransformationRequestEvent(states.botPubkey, states.title, torrent.infoHash, {
-				transform: 'cool'
-			});
+			// TODO: VERY UGLY COPY PASTE THAT SHOULD BE MOVED SOMEWHERE ELSE! WE NEDD A BOT API MODULE
+			type Format = {
+				width: number;
+				height: number;
+				video_bitrate?: string;
+			};
+
+			type Formats = {
+				[key: string]: Format;
+			};
+
+			const formats: Formats = {
+				sd: {
+					width: 720,
+					height: 480
+					// video_bitrate: '1500k'
+				},
+				hd: {
+					width: 1280,
+					height: 720
+					// video_bitrate: '2500k'
+				},
+				fhd: {
+					width: 1920,
+					height: 1080
+					// video_bitrate: '5000k'
+				}
+				// uhd: {
+				// 	width: 3840,
+				// 	height: 2160
+				// 	// video_bitrate: '8000k'
+				// }
+			};
+
+			type Language = {
+				short: string;
+				name: string;
+			};
+
+			type Languages = {
+				[key: string]: Language;
+			};
+
+			const languages: Languages = {
+				en: {short: 'en', name: 'English'}
+			};
+
+			const reqt = {
+				file: torrent.files[0].path,
+				subtitles: [{lang: languages.en}],
+				formats: formats,
+				imdbId: states.imdbId
+			};
+
+			const req = new Nip9999SeederTorrentTransformationRequestEvent(
+				states.botPubkey,
+				states.title,
+				torrent.infoHash,
+				reqt
+			);
 
 			const {dss, pub} = ncs.request(req);
 
@@ -168,17 +252,21 @@
 			});
 		});
 
-		torrent.on('upload', (bytes: any) => {
-			console.log(bytes);
-		});
+		// torrent.on('upload', (bytes: any) => {
+		// 	// console.log(bytes);
+		// });
 
 		torrent.on('error', (err: any) => {
 			console.log(err);
 		});
 
 		torrent.on('wire', (wire: any) => {
-			console.log(wire);
+			console.log("Wire" + wire);
 		});
+
+		torrent.on('noPeers', (announceType: any) =>  {
+			console.log(announceType);
+		})
 	}
 
 	async function handleChange(event: any) {
@@ -214,6 +302,31 @@
 			</div>
 
 			<div class="form-field">
+				<label for="bot">Bot</label>
+				<div class="custom-select" bind:this={selectElement2}>
+					<div class="select-trigger" role="dialog" onclick={() => (isOpen2 = !isOpen2)}>
+						{selectedOption2 || 'Select bot'}
+					</div>
+					{#if isOpen2}
+						<ul class="select-options">
+							{#each globalRunes.services as option}
+								<li
+									onclick={() => {
+										selectedOption2 = globalRunes.profiles.get(option.pubkey)?.nip01Event.profile.name ?? option.pubkey;
+										states.bot = option.pubkey;
+										isOpen2 = false;
+									}}
+								>
+									{option.nickname ?? globalRunes.profiles.get(option.pubkey)?.nip01Event.profile.name ?? option.pubkey}
+								</li>
+							{/each}
+						</ul>
+					{/if}
+				</div>
+			</div>
+
+
+			<div class="form-field">
 				<label for="title">Movie title</label>
 				<input id="title" type="text" bind:value={states.title} placeholder="Movie title" class="form-input" />
 			</div>
@@ -228,8 +341,8 @@
 				<input id="file" type="file" accept="video/*" onchange={handleChange} class="file-input" />
 			</div>
 
-			{#if states.resp.states.states === null}
-				{#if states.file !== null}
+			{#if states.resp.states.state === null}
+				{#if states.file !== null && states.community !== undefined}
 					<button type="button" class="submit-btn" onclick={() => onTranscode()}>
 						Submit to Seeder for transcoding
 						<svg class="submit-icon" viewBox="0 0 24 24">
@@ -239,8 +352,8 @@
 				{/if}
 			{:else}
 				<div class="progressbar-container">
-					<div class="progressbar-bar" style="width: {states.resp.states.progress}%;"></div>
-					<div class="progressbar-text">{states.resp.states.states}</div>
+					<div class="progressbar-bar" style="width: {progress}%;"></div>
+					<div class="progressbar-text">{states.resp.states.state}</div>
 				</div>
 			{/if}
 
@@ -273,6 +386,7 @@
 		position: relative;
 		width: 100%;
 	}
+
 	.select-trigger {
 		padding: 10px;
 		background: var(--bg-2);
@@ -281,6 +395,7 @@
 		color: var(--fg-1);
 		cursor: pointer;
 	}
+
 	.select-options {
 		position: absolute;
 		top: 100%;
@@ -294,11 +409,13 @@
 		z-index: 10;
 		backdrop-filter: blur(10px);
 	}
+
 	.select-options li {
 		padding: 10px;
 		color: var(--fg-1);
 		cursor: pointer;
 	}
+
 	.select-options li:hover {
 		background: var(--accent-color);
 	}

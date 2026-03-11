@@ -1,9 +1,19 @@
-import {defineConfig} from 'vitest/config';
+import {defineConfig} from 'vite';
 import {sveltekit} from '@sveltejs/kit/vite';
+// import tailwindcss from '@tailwindcss/vite';
 import {viteStaticCopy} from 'vite-plugin-static-copy';
 
+//https://vitejs.dev/config
 export default defineConfig({
+	server: {
+		host: true,
+		allowedHosts: ['iz-stream-ui', 'localhost', '127.0.0.1'],
+		fs: {
+			allow: ['./src']
+		}
+	},
 	plugins: [
+		// tailwindcss(),
 		sveltekit(),
 		viteStaticCopy({
 			targets: [
@@ -15,11 +25,8 @@ export default defineConfig({
 			]
 		})
 	],
+	clearScreen: false
 	// build: {
 	// 	minify: true,
 	// },
-	test: {
-		setupFiles: ['./vitest.setup.ts'],
-		include: ['test/**/*.{test,spec}.{js,ts}']
-	}
 });

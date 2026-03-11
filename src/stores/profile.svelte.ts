@@ -32,6 +32,14 @@ class GlobalRunes {
 
 	ctest = $state(new SvelteSet<string>());
 	profiles = $state(new SvelteMap<string, NostrProfile>());
+	services: Followee[] = $derived.by(() => {
+		const fl = globalRunes.nip01Events
+			.entries()
+			.filter((val) => val[1].type === UserType.SERVICE)
+			.toArray();
+		return fl.map((val) => new Followee(val[0], undefined, val[1].profile.name));
+	});
+
 	// // communities: SvelteMap<string, NostrProfile> = $derived.by(() => {
 	// // 	const communityMap = new SvelteMap<string, NostrProfile>();
 	// // 	this.profiles.forEach((profile, key) => {
@@ -174,11 +182,30 @@ class Me {
 	// listPublisher: Publisher | undefined = undefined;
 	// notificationSession: SynchronisedSession | undefined = undefined;
 	// notificationSubscription: Subscription | undefined;
-	transcodingBots: Followee[] = $derived.by(() => {
-		return [
-			new Followee('b1e997f11f8d454eae2b2c1d52948e800df4e7103412d78984827eea2be138b2', undefined, 'Transcoding bot')
-		];
-	});
+	// transcodingBots: Followee[] = $derived.by(() => {
+	// 	const fl = globalRunes.nip01Events
+	// 		.entries()
+	// 		.filter((val) => {
+	// 			console.log(val[1].type);
+	// 			console.log(UserType.SERVICE);
+	// 			console.log(val[1].type === UserType.SERVICE);
+	// 			return val[1].type === UserType.SERVICE;
+	// 		})
+	// 		.toArray();
+	// 	return fl.map((val) => new Followee(val[0], undefined, val[1].profile.name));
+	// 	//
+	// 	// list.filter((f) => globalRunes.nip01Events.get(f.pubkey)?.type === UserType.COMMUNITY);
+	// 	// // return fl
+	// 	// // 	.reduce((map, element) => map.set(element.pubkey, element), new Map<string, Followee>())
+	// 	// // 	.values()
+	// 	// // 	.toArray();
+	// 	// return fl;
+	// 	//
+	// 	//
+	// 	// return [
+	// 	// 	new Followee('b1e997f11f8d454eae2b2c1d52948e800df4e7103412d78984827eea2be138b2', undefined, 'Transcoding bot')
+	// 	// ];
+	// });
 }
 
 export const me = new Me();

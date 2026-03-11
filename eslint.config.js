@@ -4,7 +4,7 @@ import ts from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
 import sveltePlugin from 'eslint-plugin-svelte';
 import globals from 'globals';
-import importPlugin from 'eslint-plugin-import';
+// import importPlugin from 'eslint-plugin-import';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import svelteParser from 'svelte-eslint-parser';
@@ -63,7 +63,8 @@ export default [
 			'**/sw.min.js',
 			'**/node_modules',
 			'**/*.js',
-			'**/vite.config.ts'
+			'**/vite.config.ts',
+			'**/forge.config.ts'
 		]
 	},
 	{

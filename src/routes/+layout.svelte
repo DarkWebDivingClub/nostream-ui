@@ -7,7 +7,7 @@
 	import {me} from '@src/stores/profile.svelte';
 	import {normalizeRelayUrl} from '@red-token/welshman/util';
 	import {NostrClient} from 'iz-nostrlib';
-	import {applicationRelay} from '@src/config/config';
+	import {applicationRelay, devMode, baseUrls, packageMode, package_Mode} from '$config';
 
 	const layout = Log.child({component: '+layout.svelte'});
 	let login: boolean | undefined = $state();
@@ -16,7 +16,7 @@
 	let isExpanded: boolean | undefined = $state(false);
 
 	const nostrClient = new NostrClient();
-
+	console.log('BaseURL: ', baseUrls, 'PackageMode: ', packageMode);
 	$effect(() => {
 		document.documentElement.style.setProperty('--sidebar-width', isExpanded ? '80px' : '0px');
 	});
@@ -126,6 +126,7 @@
 	});
 </script>
 
+{#if package_Mode}{/if}
 <main>
 	{#if me.pubkey !== ''}
 		<div class="left-sidebar {isExpanded ? 'expanded' : ''}">
