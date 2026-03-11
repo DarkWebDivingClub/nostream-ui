@@ -7,7 +7,7 @@
 	import type {Torrent, TorrentFile} from 'webtorrent';
 	type PlayerOptions = typeof videojs.options;
 
-	const {infoHash} = $props();
+	const {infoHash, autoplay = false} = $props<{infoHash: string; autoplay?: boolean}>();
 	let videoElement: HTMLVideoElement | null = null;
 	let playerError = $state('');
 
@@ -115,18 +115,19 @@
 			const isMp4 = playFile.name.endsWith('.mp4');
 			const sourceType = isMpd ? 'application/dash+xml' : isMp4 ? 'video/mp4' : undefined;
 
-			// let x2: string = "https://dash.akamaized.net/dash264/TestCasesIOP33/adapatationSetSwitching/5/manifest.mpd"
-			let x2 = "https://va.h3.se/video/230444c3-1880-405e-9bda-4426d43ccb24/manifest.mpd"
-
 			player.src([
 				{
-					// src: playFile.streamURL,
-					src: x2,
+					src: playFile.streamURL,
 					type: sourceType
 				}
 			]);
 			console.log('[iz-stream] player src set', {src: playFile.streamURL, type: sourceType});
 			player.load();
+			if (!autoplay) {
+				// Force manual-start behavior even if a plugin/source attempts auto playback.
+				player.pause();
+				player.currentTime(0);
+			}
 
 			player.one('error', () => {
 				console.error('[iz-stream] player error', {
@@ -145,7 +146,9 @@
 				});
 			});
 
-			player.play();
+			if (autoplay) {
+				void player.play();
+			}
 		}
 	}
 
@@ -169,6 +172,8 @@
 				controls: true,
 				responsive: true,
 				fluid: true,
+				autoplay,
+				preload: 'metadata',
 				// poster: 'https://t4.ftcdn.net/jpg/01/22/97/01/360_F_122970161_S5JEt3v3wTdR7QXavi9seSKpuVBsUQsn.jpg'
 				// preload: 'auto',
 				// sources: [],
