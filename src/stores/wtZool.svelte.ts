@@ -53,5 +53,5 @@ if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
 		}
 	});
 } else {
-	console.warn('[iz-stream] serviceWorker API unavailable in this context, skipping webtorrent server registration');
+	console.warn('[nostream] serviceWorker API unavailable in this context, skipping webtorrent server registration');
 }

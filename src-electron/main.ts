@@ -145,7 +145,7 @@ app.on('activate', () => {
 function createWindow() {
 	mainWindow = new BrowserWindow({
 		icon: path.join(staticAssetsFolder, '/icon.png'),
-		title: `iz-stream`,
+		title: `nostream`,
 		width: 900,
 		height: 700,
 		minWidth: 400,
@@ -219,7 +219,7 @@ function createWindow() {
 /// Add Contect Menu
 function setupTray() {
 	tray = new Tray(path.join(staticAssetsFolder, '/icon.png'));
-	tray.setToolTip('iz-stream');
+	tray.setToolTip('nostream');
 	tray.setContextMenu(
 		Menu.buildFromTemplate([
 			{label: 'Show', click: () => mainWindow.show()},

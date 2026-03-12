@@ -36,8 +36,8 @@
 		maxWebConns: 500
 	};
 
-	console.log('[iz-stream] VideoPlayer init', {infoHash});
-	console.log('[iz-stream] announce config resolved', {
+	console.log('[nostream] VideoPlayer init', {infoHash});
+	console.log('[nostream] announce config resolved', {
 		mode: import.meta.env.MODE,
 		viteTorrentAnnounceRaw: announceRaw,
 		announce,
@@ -52,10 +52,10 @@
 		torrentInfo.upload = torrent.uploaded;
 	}
 
-	console.log('[iz-stream] VideoPlayer watching hash', {infoHash});
+	console.log('[nostream] VideoPlayer watching hash', {infoHash});
 
 	function loadTorrent(torrent: Torrent) {
-		console.log('[iz-stream] torrent loaded', {
+		console.log('[nostream] torrent loaded', {
 			infoHash: torrent.infoHash,
 			name: torrent.name,
 			fileCount: torrent.files.length
@@ -98,14 +98,14 @@
 		}
 
 		if (playFile === undefined || playFile === null) {
-			console.error('[iz-stream] no playable file found in torrent', {
+			console.error('[nostream] no playable file found in torrent', {
 				infoHash: torrent.infoHash,
 				files: torrent.files.map((f) => f.name)
 			});
 			throw new Error(`Torrent player not found.`);
 		}
 
-		console.log('[iz-stream] selected playable file', {
+		console.log('[nostream] selected playable file', {
 			name: playFile.name,
 			streamURL: playFile.streamURL
 		});
@@ -121,7 +121,7 @@
 					type: sourceType
 				}
 			]);
-			console.log('[iz-stream] player src set', {src: playFile.streamURL, type: sourceType});
+			console.log('[nostream] player src set', {src: playFile.streamURL, type: sourceType});
 			player.load();
 			if (!autoplay) {
 				// Force manual-start behavior even if a plugin/source attempts auto playback.
@@ -130,7 +130,7 @@
 			}
 
 			player.one('error', () => {
-				console.error('[iz-stream] player error', {
+				console.error('[nostream] player error', {
 					infoHash: torrent.infoHash,
 					file: playFile.name,
 					src: playFile.streamURL,
@@ -158,7 +158,7 @@
 		if (wsAnnounce.length === 0) {
 			playerError =
 				'Invalid tracker config: browser playback requires at least one ws:// or wss:// tracker in VITE_TORRENT_ANNOUNCE.';
-			console.error('[iz-stream] invalid announce configuration for browser playback', {
+			console.error('[nostream] invalid announce configuration for browser playback', {
 				infoHash,
 				announce,
 				wsAnnounce,
@@ -184,14 +184,14 @@
 		}
 
 		// TODO rewrite this with await
-		console.log('[iz-stream] torrent lookup start', {infoHash});
+		console.log('[nostream] torrent lookup start', {infoHash});
 
 		new Promise<Torrent>((resolve, reject) => {
 			wt.get(infoHash).then((torrent: Torrent) => {
-				console.log('[iz-stream] wt.get resolved', {infoHash, found: torrent != null});
+				console.log('[nostream] wt.get resolved', {infoHash, found: torrent != null});
 
 				if (torrent == null) {
-					console.log('[iz-stream] adding torrent', {infoHash, announce});
+					console.log('[nostream] adding torrent', {infoHash, announce});
 					torrent = wt.add(infoHash, options);
 				}
 
@@ -200,7 +200,7 @@
 				if (torrent.ready) resolve(torrent);
 
 				torrent.on('ready', () => {
-					console.log('[iz-stream] torrent ready', {
+					console.log('[nostream] torrent ready', {
 						infoHash: torrent.infoHash,
 						fileCount: torrent.files.length,
 						numPeers: torrent.numPeers
@@ -210,7 +210,7 @@
 				});
 
 				torrent.on('metadata', () => {
-					console.log('[iz-stream] torrent metadata', {
+					console.log('[nostream] torrent metadata', {
 						infoHash: torrent.infoHash,
 						fileCount: torrent.files.length,
 						files: torrent.files.map((file) => file.name)
@@ -218,7 +218,7 @@
 				});
 
 				torrent.on('wire', (_wire: unknown, addr: string) => {
-					console.log('[iz-stream] wire connected', {
+					console.log('[nostream] wire connected', {
 						infoHash: torrent.infoHash,
 						addr,
 						numPeers: torrent.numPeers
@@ -226,7 +226,7 @@
 				});
 
 				torrent.on('noPeers', (announceType: string) => {
-					console.warn('[iz-stream] no peers', {
+					console.warn('[nostream] no peers', {
 						infoHash,
 						announceType,
 						numPeers: torrent.numPeers
@@ -234,11 +234,11 @@
 				});
 
 				torrent.on('warning', (warning: unknown) => {
-					console.warn('[iz-stream] torrent warning', {infoHash, warning});
+					console.warn('[nostream] torrent warning', {infoHash, warning});
 				});
 
 				torrent.on('error', (error) => {
-					console.error('[iz-stream] torrent error', {
+					console.error('[nostream] torrent error', {
 						infoHash,
 						error
 					});
