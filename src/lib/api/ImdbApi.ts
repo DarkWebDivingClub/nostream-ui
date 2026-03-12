@@ -5,8 +5,16 @@ async function callImdbApi(url: string) {
 	throw new Error('Could not find info');
 }
 
+const DEFAULT_IMDB_API = 'https://imdb.stream.labs.h3.se';
+
+function resolveImdbApiBaseUrl() {
+	const configured = import.meta.env.VITE_IMDB_API?.trim();
+	const base = configured && configured.length > 0 ? configured : DEFAULT_IMDB_API;
+	return base.replace(/\/+$/, '');
+}
+
 export class ImdbApi {
-	api = 'https://imdb.stream.labs.h3.se';
+	api = resolveImdbApiBaseUrl();
 
 	async getInfo(imdbId: string) {
 		return callImdbApi(`${this.api}/info/${imdbId}`);
