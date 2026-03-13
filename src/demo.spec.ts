@@ -1,9 +1,9 @@
 import {describe, it, expect} from 'vitest';
 import {normalizeRelayUrl, type TrustedEvent} from '@red-token/welshman/util';
-import {EventType, type SignerData, SignerType, Subscription, SynchronisedSession} from 'iz-nostrlib';
-// import {Nip35TorrentEvent} from 'iz-nostrlib/nips';
-// import {DynamicSynchronisedSession, DynamicSubscription} from 'iz-nostrlib/ses';
-import {asyncCreateWelshmanSession, CommunityNostrContext} from 'iz-nostrlib/communities';
+import {EventType, type SignerData, SignerType, Subscription, SynchronisedSession} from '@nostream/sdk';
+// import {Nip35TorrentEvent} from '@nostream/sdk/nips';
+// import {DynamicSynchronisedSession, DynamicSubscription} from '@nostream/sdk/ses';
+import {asyncCreateWelshmanSession, CommunityNostrContext} from '@nostream/sdk/communities';
 // import {globalNostrContext} from '$lib/stores/profile.svelte';
 
 describe('sum test', () => {

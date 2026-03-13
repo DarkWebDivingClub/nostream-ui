@@ -1,15 +1,15 @@
 <script lang="ts">
 	import {onDestroy, onMount} from 'svelte';
 	import {goto} from '$app/navigation';
-	import {EventType, type Publisher, safeFindSingleTagValue} from 'iz-nostrlib';
-	import {Nip35TorrentEvent} from 'iz-nostrlib/nips';
-	import {CommunityNostrContext} from 'iz-nostrlib/communities';
+	import {EventType, type Publisher, safeFindSingleTagValue} from '@nostream/sdk';
+	import {Nip35TorrentEvent} from '@nostream/sdk/nips';
+	import {CommunityNostrContext} from '@nostream/sdk/communities';
 	import {
 		Nip9999SeederTorrentTransformationRequestEvent,
 		Nip9999SeederTorrentTransformationResponseEventHandler,
 		NostrCommunityServiceClient
-	} from 'iz-nostrlib/seederbot';
-	import {DynamicPublisher, DynamicSynchronisedSession, StaticEventsProcessor} from 'iz-nostrlib/ses';
+	} from '@nostream/sdk/seederbot';
+	import {DynamicPublisher, DynamicSynchronisedSession, StaticEventsProcessor} from '@nostream/sdk/ses';
 	import type {TrustedEvent} from '@red-token/welshman/util';
 	import {wt} from '@src/stores/wtZool.svelte';
 	import {globalNostrContext, globalRunes, me} from '@src/stores/profile.svelte';

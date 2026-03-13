@@ -1,14 +1,14 @@
 <script lang="ts">
-	import {asyncCreateWelshmanSession, Identifier, Identity} from 'iz-nostrlib/communities';
-	import {SignerType} from 'iz-nostrlib';
+	import {asyncCreateWelshmanSession, Identifier, Identity} from '@nostream/sdk/communities';
+	import {SignerType} from '@nostream/sdk';
 	import {globalNostrContext} from '@src/stores/profile.svelte';
-	import {DynamicPublisher} from 'iz-nostrlib/ses';
+	import {DynamicPublisher} from '@nostream/sdk/ses';
 	import {
 		Nip01UserMetaDataEvent,
 		Nip65RelayListMetadataEvent,
 		NostrUserProfileMetaData,
 		UserType
-	} from 'iz-nostrlib/nips';
+	} from '@nostream/sdk/nips';
 	import {defaultCommunityRelay} from '@src/config/config';
 	import {nip19} from 'nostr-tools';
 	import {generateSecretKey, getPublicKey} from 'nostr-tools/pure';

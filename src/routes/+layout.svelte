@@ -6,7 +6,7 @@
 	import {Log} from '@src/services/Logger';
 	import {me} from '@src/stores/profile.svelte';
 	import {normalizeRelayUrl} from '@red-token/welshman/util';
-	import {NostrClient} from 'iz-nostrlib';
+	import {NostrClient} from '@nostream/sdk';
 	import {applicationRelay, devMode, baseUrls, packageMode, package_Mode} from '$config';
 
 	const layout = Log.child({component: '+layout.svelte'});

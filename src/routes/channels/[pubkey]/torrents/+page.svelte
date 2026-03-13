@@ -1,13 +1,13 @@
 <script lang="ts">
 	import {page} from '$app/state';
 	import {onMount} from 'svelte';
-	import {EventType} from 'iz-nostrlib';
+	import {EventType} from '@nostream/sdk';
 	import {goto} from '$app/navigation';
 	import {globalNostrContext, globalRunes, me} from '@src/stores/profile.svelte';
-	import {DynamicSubscription, DynamicSynchronisedSession} from 'iz-nostrlib/ses';
-	import {CommunityNostrContext} from 'iz-nostrlib/communities';
+	import {DynamicSubscription, DynamicSynchronisedSession} from '@nostream/sdk/ses';
+	import {CommunityNostrContext} from '@nostream/sdk/communities';
 	import type {TrustedEvent} from '@red-token/welshman/util';
-	import {Nip35TorrentEvent, NostrUserProfileMetaData, UserType} from 'iz-nostrlib/nips';
+	import {Nip35TorrentEvent, NostrUserProfileMetaData, UserType} from '@nostream/sdk/nips';
 
 	let events: Nip35TorrentEvent[] = $state([]);
 

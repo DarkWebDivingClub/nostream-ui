@@ -1,10 +1,10 @@
 <script lang="ts">
 	import {onMount} from 'svelte';
-	import {Publisher, Subscription, SynchronisedSession} from 'iz-nostrlib';
+	import {Publisher, Subscription, SynchronisedSession} from '@nostream/sdk';
 	import {s} from '@src/stores/assetStore.svelte';
 	import {SvelteMap} from 'svelte/reactivity';
-	import {Nip25ReactionsEvent} from 'iz-nostrlib/nips';
-	import {createRefETags} from 'iz-nostrlib/util';
+	import {Nip25ReactionsEvent} from '@nostream/sdk/nips';
+	import {createRefETags} from '@nostream/sdk/util';
 	// import {communities} from '@src/stores/community.svelte';
 
 	let session: SynchronisedSession;

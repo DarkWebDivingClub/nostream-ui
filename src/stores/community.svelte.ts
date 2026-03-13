@@ -1,6 +1,6 @@
-import {type SignerData} from 'iz-nostrlib';
+import {type SignerData} from '@nostream/sdk';
 import {me} from '@src/stores/profile.svelte';
-import {asyncCreateWelshmanSession, Identifier} from 'iz-nostrlib/communities';
+import {asyncCreateWelshmanSession, Identifier} from '@nostream/sdk/communities';
 
 // const url = 'wss://relay.stream.labs.h3.se';
 // const relays = [normalizeRelayUrl(url)];

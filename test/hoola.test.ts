@@ -1,5 +1,5 @@
 import {describe, it} from 'vitest';
-import {AbstractNipMiniEvent} from 'iz-nostrlib';
+import {AbstractNipMiniEvent} from '@nostream/sdk';
 import {createEvent, type CreateEventOpts, type TrustedEvent} from '@red-token/welshman/util';
 import {own} from '@red-token/welshman/signer';
 import {generateSecretKey, getPublicKey} from 'nostr-tools/pure';

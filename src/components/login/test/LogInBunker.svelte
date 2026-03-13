@@ -16,7 +16,7 @@
 	// import { PLATFORM_LOGO, PLATFORM_NAME, PLATFORM_URL, SIGNER_RELAYS } from '@app/state';
 
 	import {QRCode} from '@red-token/iz-svelte-library';
-	import {NostrClient, type SignerData, SignerType} from 'iz-nostrlib';
+	import {NostrClient, type SignerData, SignerType} from '@nostream/sdk';
 	import {me} from '@src/stores/profile.svelte';
 	import {logIn} from '@src/stores/community.svelte';
 	import {signerRelays} from '@src/config/config';
@@ -50,7 +50,7 @@
 	// 	const { pubkey, token, relays } = Nip46Broker.parseBunkerLink(bunker);
 	//
 	// import {QRCode} from '@red-token/iz-svelte-library';
-	// import {NostrClient, type SignerData, SignerType} from 'iz-nostrlib';
+	// import {NostrClient, type SignerData, SignerType} from '@nostream/sdk';
 	// import {me} from '../../../stores/profile.svelte';
 	// import {logIn} from '@src/stores/community.svelte';
 	// import {Nip46Broker, type Nip46BrokerParams} from '@red-token/welshman/signer';

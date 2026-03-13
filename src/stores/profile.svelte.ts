@@ -6,9 +6,9 @@ import {
 	Nip65RelayListMetadataEvent,
 	NostrUserProfileMetaData,
 	UserType
-} from 'iz-nostrlib/nips';
-import {GlobalNostrContext, Identifier, Identity} from 'iz-nostrlib/communities';
-import {DynamicPublisher} from 'iz-nostrlib/ses';
+} from '@nostream/sdk/nips';
+import {GlobalNostrContext, Identifier, Identity} from '@nostream/sdk/communities';
+import {DynamicPublisher} from '@nostream/sdk/ses';
 import {normalizeRelayUrl} from '@red-token/welshman/util';
 import {setContext} from '@red-token/welshman/lib';
 import {getDefaultAppContext, getDefaultNetContext} from '@red-token/welshman/app';

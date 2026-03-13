@@ -3,11 +3,11 @@
 	import {onMount} from 'svelte';
 	import {s} from '@src/stores/assetStore.svelte';
 	import {defaultNip65} from '@src/stores/profile.svelte';
-	import {EventType} from 'iz-nostrlib';
+	import {EventType} from '@nostream/sdk';
 	import {VideoPlayer} from '$components';
-	import {ReactiveArray} from 'iz-nostrlib/util';
-	import {Nip35TorrentEvent, UserType} from 'iz-nostrlib/nips';
-	import {DynamicSubscription, DynamicSynchronisedSession} from 'iz-nostrlib/ses';
+	import {ReactiveArray} from '@nostream/sdk/util';
+	import {Nip35TorrentEvent, UserType} from '@nostream/sdk/nips';
+	import {DynamicSubscription, DynamicSynchronisedSession} from '@nostream/sdk/ses';
 	import {globalRunes} from '@src/stores/profile.svelte';
 	import {goto} from '$app/navigation';
 

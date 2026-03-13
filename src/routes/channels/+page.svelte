@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {goto} from '$app/navigation';
-	import {UserType} from 'iz-nostrlib/nips';
+	import {UserType} from '@nostream/sdk/nips';
 	import {Profile2} from '$components';
 	import {globalRunes} from '@src/stores/profile.svelte';
 

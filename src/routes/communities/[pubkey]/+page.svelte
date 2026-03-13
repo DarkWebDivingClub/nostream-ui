@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {page} from '$app/state';
-	import {NostrUserProfileMetaData} from 'iz-nostrlib/nip01';
+	import {NostrUserProfileMetaData} from '@nostream/sdk/nip01';
 	import {defaultNip02, globalRunes, me} from '@src/stores/profile.svelte';
-	import {Followee, Nip02FollowListEvent} from 'iz-nostrlib/nips';
+	import {Followee, Nip02FollowListEvent} from '@nostream/sdk/nips';
 	import {onMount} from 'svelte';
 
 	const defaultProfile = new NostrUserProfileMetaData();

@@ -93,7 +93,7 @@
 		"async-mutex": "^0.5.0",
 		"electron-squirrel-startup": "^1.0.1",
 		"electron-store": "^10.0.1",
-		"iz-nostrlib": "^0.2.4",
+		"@nostream/sdk": "^0.2.4",
 		"leaflet": "^1.9.4",
 		"ngeohash": "^0.6.3",
 		"nostr-tools": "^2.10.4",

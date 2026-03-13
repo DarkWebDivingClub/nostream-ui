@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {SignerType} from 'iz-nostrlib';
+	import {SignerType} from '@nostream/sdk';
 	import {getNip07, type Nip07} from '@red-token/welshman/signer';
 	import {onMount} from 'svelte';
 	import {logIn} from '@src/stores/community.svelte';

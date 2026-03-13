@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {me} from '@src/stores/profile.svelte';
 	import {onMount} from 'svelte';
-	import {EventType, NostrClient, type Publisher} from 'iz-nostrlib';
+	import {EventType, NostrClient, type Publisher} from '@nostream/sdk';
 	// import {
 	//     Nip35TorrentEvent,
 	//     Nip35TorrentEventComments,
