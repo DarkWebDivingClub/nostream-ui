@@ -13,6 +13,7 @@
 	import type {TrustedEvent} from '@red-token/welshman/util';
 	import {wt} from '@src/stores/wtZool.svelte';
 	import {globalNostrContext, globalRunes, me} from '@src/stores/profile.svelte';
+	import {torrentAnnounceList} from '@src/config/config';
 
 	// type RequestState = {
 	// 	state: string,
@@ -94,8 +95,7 @@
 	});
 
 	const options = {
-		announce: ['wss://tracker.webtorrent.dev', 'wss://tracker.btorrent.xyz', 'wss://tracker.openwebtorrent.com'],
-		// announce: ['wss://tracker.webtorrent.dev', 'wss://tracker.btorrent.xyz'],
+		announce: torrentAnnounceList,
 		maxWebConns: 500
 	};
 

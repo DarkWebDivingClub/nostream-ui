@@ -10,7 +10,7 @@ describe('sum test', () => {
 	it('adds 1 + 2 to equal 3', async () => {
 		expect(1 + 2).toBe(3);
 
-		const url = 'wss://relay.stream.labs.h3.se';
+		const url = 'ws://127.0.0.1:7777';
 		const relays = [normalizeRelayUrl(url)];
 
 		const bobNSec = 'nsec1zsp48upz3vd64lwhx7me8utrxyfxuzdwvxhfld2q0ehs0ya9mlxs47v64q';

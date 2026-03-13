@@ -19,11 +19,11 @@
 	import {NostrClient, type SignerData, SignerType} from 'iz-nostrlib';
 	import {me} from '@src/stores/profile.svelte';
 	import {logIn} from '@src/stores/community.svelte';
+	import {signerRelays} from '@src/config/config';
 
 	const abortController = new AbortController();
 
-	// export const SIGNER_RELAYS = ['wss://relay.stream.labs.h3.se/'];
-	export const SIGNER_RELAYS = ['wss://relay.pre-alfa.iz-stream.com/'];
+	export const SIGNER_RELAYS = signerRelays;
 
 	export const PLATFORM_URL = window.location.origin;
 

@@ -3,7 +3,7 @@
 	import videojs from 'video.js';
 	import 'videojs-contrib-dash';
 	import {wt} from '@src/stores/wtZool.svelte';
-	import {torrentAnnounce} from '$config';
+	import {torrentAnnounceList} from '@src/config/config';
 	import type {Torrent, TorrentFile} from 'webtorrent';
 	type PlayerOptions = typeof videojs.options;
 
@@ -23,11 +23,7 @@
 		download: 0
 	});
 
-	const announceRaw = torrentAnnounce || 'wss://tracker.webtorrent.dev,wss://tracker.btorrent.xyz,wss://tracker.openwebtorrent.com';
-	const announce = announceRaw
-		.split(',')
-		.map((value: string) => value.trim())
-		.filter((value: string) => value.length > 0);
+	const announce = [...torrentAnnounceList];
 	const wsAnnounce = announce.filter((value: string) => value.startsWith('ws://') || value.startsWith('wss://'));
 	const httpAnnounce = announce.filter((value: string) => value.startsWith('http://') || value.startsWith('https://'));
 
@@ -39,7 +35,6 @@
 	console.log('[nostream] VideoPlayer init', {infoHash});
 	console.log('[nostream] announce config resolved', {
 		mode: import.meta.env.MODE,
-		viteTorrentAnnounceRaw: announceRaw,
 		announce,
 		wsAnnounce,
 		httpAnnounce

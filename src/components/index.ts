@@ -6,7 +6,6 @@ export {default as Profile} from './Profile.svelte';
 export {default as Profile2} from './Profile2.svelte';
 export {default as Seasons} from './Seasons.svelte';
 export {default as Series} from './Series.svelte';
-export {default as Video} from './Video.svelte';
 export {default as VideoPlayer} from './VideoPlayer.svelte';
 export {default as LogInComponent} from './login/LogInComponent.svelte';
 export {default as Popup} from './login/Popup.svelte';
